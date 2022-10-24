@@ -140,3 +140,37 @@ select Year(DateApproved) Year_Approved, Month(DateApproved)Month_Approved, Proc
 from ppp_files
 group by Year(DateApproved),  Month(DateApproved), ProcessingMethod
 order by 4 desc
+
+
+-----Creating View------
+use ppp
+create view ppp_main as
+select d.Industry_Discription,
+year(dateapproved) year_approved,
+month(dateapproved)month_approved,
+OriginatingLender,
+BorrowerState,
+race,
+Gender,
+Ethnicity,
+count (loannumber) no_of_approved,
+sum(currentapprovalamount) current_approval_amount,
+avg(currentapprovalamount) current_avg_loan_size,
+sum(forgivenessamount) amount_forgiven,
+sum(initialapprovalamount) approved_amount,
+avg(initialapprovalamount) avg_loan_size
+
+from [dbo].[ppp_files] p
+inner join [dbo].[Modified_Naics_table] d
+on left(p.NAICSCode,2)=d.look_up
+group by
+d.Industry_Discription,
+year(dateapproved),
+MONTH(dateapproved),
+OriginatingLender,
+BorrowerState,
+Race,
+Gender,
+Ethnicity
+
+select top(10) * from [dbo].[Modified_Naics_table]
